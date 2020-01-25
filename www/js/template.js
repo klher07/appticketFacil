@@ -268,6 +268,7 @@
 
 
 	function validarCedula(e){
+		bajarTodasEspeciales1();
 		console.log(e.keyCode);
 		var controlTiposTickets = $('#controlTiposTickets').val();
 		if(e.keyCode == 13){
@@ -358,6 +359,7 @@
 										$('#ingBarcode').val('');
 										$('#ingCedula').val('');
 										$('#ingBarcode').focus();
+										bajarTodasEspeciales1();
 										bajarTodas();
 									}, 3000);
 							}else if(strQr == 0 ){
@@ -595,6 +597,7 @@
 										$('#ingBarcode').val('');
 										$('#ingCedula').val('');
 										$('#ingBarcode').focus();
+										bajarTodasEspeciales1();
 										bajarTodas()
 									}, 3000);
 							}else if(strQr != 0 && controlTiposTickets != 0 ){
@@ -1373,6 +1376,80 @@
 						alert('Tickets Especiales Actualizados con Exito');
 						$('#waitsubir2').css('display','none');
 						window.location = '';
+					},errorCB,successCB);
+					//$('#recibeJson').html(response);
+					//alert(response);
+					$('#waitbajar').fadeOut('slow');
+					$('#btnbajar').delay(600).fadeIn('slow');
+					
+					
+					<!-- $('#myidconcierto').val(''); -->
+					<!-- $('#clave_segura').val(''); -->
+				} 
+				
+				<!-- setTimeout(function(){ -->
+					
+				<!-- }, 10000); -->
+				
+			});
+			
+			
+			
+		
+	}
+
+	function bajarTodasEspeciales1(){
+		var idcon=$('#myidconcierto').val();
+		
+		 
+			<!-- var localidad = $(this).val(); -->
+			var idconcierto=$('#myidconcierto').val();
+			//alert(idconcierto +'<<>>'+localidad);
+			$('#bajarTodas22').removeClass('btn btn-info');
+			$('#bajarTodas22').addClass('btn btn-danger');
+			$('#bajarTodas22').attr('disabled',true);
+			$('#waitsubir4').css('display','block');
+			var base = 1;
+			if(navigator.onLine){
+  				//alert('online');
+  				$('#mensajeConteo').html('<center><b>Espere un momento sincronizando su app!!!</b></center>');
+				$('#mensajeConteo').delay(600).fadeOut('slow');
+ 			 } else {
+  				//alert('offline');
+  				$('#mensajeConteo').html('<center><b>No hay Conexion a internet!!!</b></center>');
+				$('#mensajeConteo').delay(600).fadeOut('slow');
+			}
+			
+			//$('#mensajeConteo').html('<center><img src="../img/loading.gif" style="max-width:25px;"></center>');
+			$.ajax({
+				url: "https://www.ticketfacil.ec/ticket2/controlAccesos/bajarTodasEspeciales.php?idconcierto="+idconcierto+"&base="+base,
+				//data: {idconcierto:idconcierto,localidad:localidad},
+			}).done(function(response) {
+				
+				
+				<!-- alert(response); -->
+				if(response != 'error'){
+					var objDatos=JSON.parse(response);
+					var misboletos=objDatos.Boletos;
+					console.log(misboletos.length);
+					var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					db.transaction(function(tx){
+						for(i=0; i < misboletos.length; i++){
+							var id = misboletos[i].idBoleto; 
+							var idBoleto = misboletos[i].idBoleto;
+							var cedula = misboletos[i].cedula;
+							var id_descuento = misboletos[i].id_descuento;
+							var nom_empleado = misboletos[i].nom_empleado;
+							
+							var estado2 = 'V';
+							
+							<!-- alert('UPDATE Boleto SET idCli = '+cedula+' , strEstado= '+estado2+'  WHERE idBoleto = '+idBoleto+' ;'); -->
+							tx.executeSql('UPDATE Boleto SET nom_empleado = ? , idCli = ? , id_descuento = ? , strEstado= ?  WHERE idBoleto = ? ;',[nom_empleado , cedula,id_descuento,estado2,idBoleto]);
+						}
+						$('#mensajeConteo').delay(600).fadeOut('slow');
+						//alert('Tickets Especiales Actualizados con Exito');
+						$('#waitsubir2').css('display','none');
+						//window.location = '';
 					},errorCB,successCB);
 					//$('#recibeJson').html(response);
 					//alert(response);
