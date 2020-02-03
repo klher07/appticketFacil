@@ -171,7 +171,7 @@ function validarBoletocodigo(e){
 				if(registros > 0){
                       validarIngresocodigo();
 				}else{		
-				  document.getElementById('player1').play();
+				  /*document.getElementById('player1').play();
 					$('.smsback').css('background-color','#f0ad4e');
 					$('#titlemodal').html('Boleto Incorrecto!');
 					$('#mensaje').html('Datos Incorrectos!');
@@ -186,7 +186,7 @@ function validarBoletocodigo(e){
 						tx.executeSql('INSERT INTO errores (nombre , estado) VALUES (?,?);',['Boleto incorrecto','22'],function(tx,res){
 							
 						});                
-					},errorCB,successCB);		
+					},errorCB,successCB);*/		
 				}
 				
 			});
@@ -207,7 +207,7 @@ function validarIngresocodigo3(){
 				if(registros > 0){
                       validarIngresocodigo();
 				}else{		
-				   document.getElementById('player1').play();
+				  /* document.getElementById('player1').play();
 					$('.smsback').css('background-color','#f0ad4e');
 					$('#titlemodal').html('Boleto Incorrecto!');
 					$('#mensaje').html('Datos Incorrectos!');
@@ -222,7 +222,7 @@ function validarIngresocodigo3(){
 						tx.executeSql('INSERT INTO errores (nombre , estado) VALUES (?,?);',['Boleto incorrecto','22'],function(tx,res){
 							
 						});                
-					},errorCB,successCB);
+					},errorCB,successCB);*/
 				}
 				
 			});
@@ -289,6 +289,7 @@ function validarIngresocodigo(){
 							var idabajo = row.idabajo;
 							var inactivo = "I";
 							// alert(nombre);
+							document.getElementById('player1').pause();
 							document.getElementById('player').play();
 							$('.smsback').css('background-color','#5cb85c');
 							$('#titlemodal').html('Boleto Correcto!');
@@ -311,7 +312,7 @@ function validarIngresocodigo(){
 							setTimeout(function(){
 								//alert("Boom!");
 								location.reload();
-							}, 1000);
+							}, 100);
 						}else if(estado == "ANU"){
 							// alert('ya usado');
 							var idabajo = row.idabajo;
@@ -380,6 +381,7 @@ function validarIngresocodigo(){
 							var idabajo = row.idabajo;
 							var inactivo = "I";
 							// alert(nombre);
+							document.getElementById('player1').pause();
 							document.getElementById('player').play();
 							$('.smsback').css('background-color','#5cb85c');
 							$('#titlemodal').html('Boleto Correcto!');
@@ -406,6 +408,7 @@ function validarIngresocodigo(){
 						}
 					}
 				}else{
+					document.getElementById('player').pause();
 					document.getElementById('player1').play();
 					$('.smsback').css('background-color','#f0ad4e');
 					$('#titlemodal').html('Boleto Incorrecto!');

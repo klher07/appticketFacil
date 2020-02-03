@@ -103,8 +103,14 @@
 				</li>
 				
 				<li class = 'pasar_encima paraCajas' style = 'padding-top:10px;padding-bottom:10px;' >
-					<a href="javascript:void();"  onclick="sincroniza()" class = 'paraCajas' >
+					<a href="javascript:void();"  onclick="sincroniza();" class = 'paraCajas' >
 						<i class="material-icons">cloud_download</i> <span id="btnbajar22" >Sincronizar Tickets Especiales </span>
+					</a>
+				</li>
+
+				<li class = 'pasar_encima paraCajas' style = 'padding-top:10px;padding-bottom:10px;' >
+					<a href="javascript:void();"  onclick="socios();" class = 'paraCajas' >
+						<i class="material-icons">cloud_download</i> <span id="btnbajar222" >Sincronizar Tickets Especiales </span>
 					</a>
 				</li>
 				
@@ -176,12 +182,12 @@
 							<div class="solocodigo" >
 								<div class="form-group label-floating">
 									<label class="control-label">ingrese el codigo del ticket!!</label>
-									<input type="number" class="form-control input-lg" id="onlycodigo" onkeydown="validarBoletocodigo1(event);validarBoletocodigo(event)"/>
+									<input type="number" class="form-control input-lg" id="onlycodigo" onkeydown="validarBoletoError(event);validarBoletocodigo1(event);validarBoletocodigo(event)"/>
 								</div>
 								
 								<div class="row" style="margin-top:2%;">
 									<div class="col-lg-12" style="text-align:center;">
-										<button class="btn btn-simple" onclick="validarIngresocodigo2();validarIngresocodigo3();">VALIDAR<div class="ripple-container"></div></button>
+										<button class="btn btn-simple" onclick="validarBoletoError1();validarIngresocodigo2();validarIngresocodigo3();">VALIDAR<div class="ripple-container"></div></button>
 										<img src="../img/loading.gif" style="max-width:25px; display:none;" id="waitvalidarcodigo" />
 									</div>
 								</div>
@@ -258,12 +264,20 @@
 										<input type="radio" id="r2" name="tipoConcierto" value = "1" onclick = "seleccionaTipoDescuento(1)"/>
 										<label for="r2" style = "font-size:10px;" ><span></span>Especial</label>
 									</td>
+									<td>
+										<input type="radio" id="r3" name="tipoConcierto" value = "2" onclick = "seleccionaTipoDescuento(2)"/>
+										<label for="r3" style = "font-size:10px;" ><span></span>Socio</label>
+									</td>
 								</tr>
 							</table>
 						
-						
-						<input onkeydown="ingresoTicket(event);" type = "number" id = "ingBarcode" class = "form-control"  placeholder = 'ingrese ticket' />
-						<input onkeydown="validarCedula(event);" type = "number" id = "ingCedula" class = "form-control"  readonly disabled placeholder = 'ingrese cedula' />
+						<div id="no_socio">
+							<input onkeydown="validarBoletocodigo1(event);ingresoTicket(event);" type = "number" id = "ingBarcode" class = "form-control"  placeholder = 'ingrese ticket' />
+							<input onkeydown="validarCedula(event);" type = "number" id = "ingCedula" class = "form-control"  readonly disabled placeholder = 'ingrese cedula' />
+						</div>
+						<div id="socio" style="display:none;">
+							<input onkeydown="validarCedula(event);" type = "number" id = "ingCedula1" class = "form-control"  readonly disabled placeholder = 'ingrese cedula' />
+						</div>
 						<input type = "text" id = "controlTiposTickets" class = "form-control"  readonly disabled  value = "0" />
 					</div>
 					
@@ -511,6 +525,37 @@
 			</div>
 		</div>
 	</div>
+
+	<div data-keyboard="false" data-backdrop="static" class="modal fade" id="ticketsEspeciales" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style = 'display:none;padding-right:2%;padding-left:2%' >
+		<div class="modal-dialog" role="document" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick = "window.location=''" ><span aria-hidden="true">&times;</span></button>
+					
+					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					&nbsp;&nbsp;<strong>Sincronizar Ticket Especiales</strong>&nbsp;
+				</div>
+				<div class="modal-body">
+					<div class="table-responsive">
+						<table class="table table-bordered table table-condensed" >
+							<tr>
+								<td>
+									<button type="button" id="bu1" class="btn btn-warning"  onclick = "cancelarSincronizacionEspeciales();"  >Cancelar</button>
+								</td>							
+								<td ><button type="button" id="bu2" class="btn btn-danger" onclick = " aceptarSincronizacionEspeciales();" >Aceptar</button></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer"  >
+					<div id = 'carg' style="display: none;" class="ct">
+				<p class="text-center" color="info">Por favor Espere...</p>
+				<center><div  style="width:300px"><div class="progress progress-striped active"><div class="progress-bar ctb" role="progressbar"aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"style="width: 0%"><span id="cd">0 %completado</span></div></div></div></center>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	
 	<div data-keyboard="false" data-backdrop="static" class="modal fade" id="contieneReporteDiferencias" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style = 'display:none;padding-right:2%;padding-left:2%' >
@@ -645,6 +690,7 @@
 	</div>
 </body>
 	<script type="text/javascript">
+
 
 		////////
             onDeviceReady();
@@ -959,10 +1005,210 @@ function bajarCodigos(){
 		});
 	}
 
+	function validarBoletoError(e){
+	console.log(e.keyCode);
+	   if(e.keyCode == 13){
+	   	var perfil_empleado=$('#perfil_empleado').val();
+	   	if(perfil_empleado=="lectora"){
+           var codigo = $('#onlycodigo').val();
+	   	}else{
+            var codigo = $('#ingBarcode').val();
+	   	}
+       // var codigo = $('#onlycodigo').val();
+		var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+		db.transaction(function(tx){
+			tx.executeSql('SELECT * FROM Boletos_Reimpresos WHERE strBarcode = ?;',[codigo],function(tx,results){
+				console.log(results);
+				// var registros_no_vendidos = results.items.length;
+				//var vendidos  = results.rows[0].vendidos;
+				//var datos = '';
+				var registros = results.rows.length;
+				if(registros==0){
+                      //validarIngresocodigo1();
+				    document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						location.reload();
+					}, 1000);
+				}else{		
+				  /*document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						//location.reload();
+					}, 1000);*/
+					
+					/*var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					db.transaction(function(tx){
+						tx.executeSql('INSERT INTO errores (nombre , estado) VALUES (?,?);',['Boleto incorrecto','22'],function(tx,res){
+							
+						});                
+					},errorCB,successCB);*/
+				}
+				
+			});
+		},errorCB,successCB);
+
+		  var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+		db.transaction(function(tx){
+			tx.executeSql('SELECT * FROM Boleto WHERE strBarcode = ?;',[codigo],function(tx,results){
+				console.log(results);
+				// var registros_no_vendidos = results.items.length;
+				//var vendidos  = results.rows[0].vendidos;
+				//var datos = '';
+				var registros = results.rows.length;
+				if(registros==0){
+                      //validarIngresocodigo1();
+				    document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						location.reload();
+					}, 1000);
+				}else{		
+				  /*document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						//location.reload();
+					}, 1000);*/
+					
+					/*var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					db.transaction(function(tx){
+						tx.executeSql('INSERT INTO errores (nombre , estado) VALUES (?,?);',['Boleto incorrecto','22'],function(tx,res){
+							
+						});                
+					},errorCB,successCB);*/
+
+					
+				}
+				
+			});
+		},errorCB,successCB);
+	   }
+    }
+
+
+    function validarBoletoError1(){
+	//console.log(e.keyCode);
+	   //if(e.keyCode == 13){
+	   	var perfil_empleado=$('#perfil_empleado').val();
+	   	if(perfil_empleado=="lectora"){
+           var codigo = $('#onlycodigo').val();
+	   	}else{
+            var codigo = $('#ingBarcode').val();
+	   	}
+       // var codigo = $('#onlycodigo').val();
+		var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+		db.transaction(function(tx){
+			tx.executeSql('SELECT * FROM Boletos_Reimpresos WHERE strBarcode = ?;',[codigo],function(tx,results){
+				console.log(results);
+				// var registros_no_vendidos = results.items.length;
+				//var vendidos  = results.rows[0].vendidos;
+				//var datos = '';
+				var registros = results.rows.length;
+				if(registros==0){
+                      //validarIngresocodigo1();
+				    document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						location.reload();
+					}, 2000);
+				}else{		
+				  /*document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						//location.reload();
+					}, 1000);*/
+					
+					/*var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					db.transaction(function(tx){
+						tx.executeSql('INSERT INTO errores (nombre , estado) VALUES (?,?);',['Boleto incorrecto','22'],function(tx,res){
+							
+						});                
+					},errorCB,successCB);*/
+				}
+				
+			});
+		},errorCB,successCB);
+
+		  var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+		db.transaction(function(tx){
+			tx.executeSql('SELECT * FROM Boleto WHERE strBarcode = ?;',[codigo],function(tx,results){
+				console.log(results);
+				// var registros_no_vendidos = results.items.length;
+				//var vendidos  = results.rows[0].vendidos;
+				//var datos = '';
+				var registros = results.rows.length;
+				if(registros==0){
+                      //validarIngresocodigo1();
+				    document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						location.reload();
+					}, 2000);
+				}else{		
+				  /*document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						//location.reload();
+					}, 1000);*/
+					
+					/*var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					db.transaction(function(tx){
+						tx.executeSql('INSERT INTO errores (nombre , estado) VALUES (?,?);',['Boleto incorrecto','22'],function(tx,res){
+							
+						});                
+					},errorCB,successCB);*/
+
+					
+				}
+				
+			});
+		},errorCB,successCB);
+	   //}
+    }
+
+
 	function validarBoletocodigo1(e){
 	console.log(e.keyCode);
 	   if(e.keyCode == 13){
-        var codigo = $('#onlycodigo').val();
+	   	var perfil_empleado=$('#perfil_empleado').val();
+	   	if(perfil_empleado=="lectora"){
+           var codigo = $('#onlycodigo').val();
+	   	}else{
+            var codigo = $('#ingBarcode').val();
+	   	}
+       // var codigo = $('#onlycodigo').val();
 		var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
 		db.transaction(function(tx){
 			tx.executeSql('SELECT * FROM Boletos_Reimpresos WHERE strBarcode = ?;',[codigo],function(tx,results){
@@ -974,15 +1220,15 @@ function bajarCodigos(){
 				if(registros > 0){
                       validarIngresocodigo1();
 				}else{		
-				  document.getElementById('player1').play();
+				  /*document.getElementById('player1').play();
 					$('.smsback').css('background-color','#f0ad4e');
 					$('#titlemodal').html('Boleto Incorrecto!');
 					$('#mensaje').html('Datos Incorrectos!');
 					$('#sms').modal('show');
 					setTimeout(function(){
 						//alert("Boom!");
-						location.reload();
-					}, 1000);
+						//location.reload();
+					}, 1000);*/
 					
 					/*var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
 					db.transaction(function(tx){
@@ -998,7 +1244,15 @@ function bajarCodigos(){
     }
 
     function validarIngresocodigo2(){
-	    var codigo = $('#onlycodigo').val();
+
+    	var perfil_empleado=$('#perfil_empleado').val();
+	   	if(perfil_empleado=="lectora"){
+           var codigo = $('#onlycodigo').val();
+	   	}else{
+            var codigo = $('#ingBarcode').val();
+	   	}
+
+	    //var codigo = $('#onlycodigo').val();
 		var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
 		db.transaction(function(tx){
 			tx.executeSql('SELECT * FROM Boletos_Reimpresos WHERE strBarcode = ?;',[codigo],function(tx,results){
@@ -1011,7 +1265,7 @@ function bajarCodigos(){
                       validarIngresocodigo1();
 				}else{
 
-				   document.getElementById('player1').play();
+				   /*document.getElementById('player1').play();
 					$('.smsback').css('background-color','#f0ad4e');
 					$('#titlemodal').html('Boleto Incorrecto!');
 					$('#mensaje').html('Datos Incorrectos!');
@@ -1019,7 +1273,7 @@ function bajarCodigos(){
 					setTimeout(function(){
 						//alert("Boom!");
 						location.reload();
-					}, 1000);
+					}, 1000);*/
 					
 					/*var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
 					db.transaction(function(tx){
@@ -1039,7 +1293,13 @@ function validarIngresocodigo1(){
 	// alert('hola');
 	var reloj = $("#iframe1").contents().find("#reloj").val();
 	var playing = false;
-	var codigo = $('#onlycodigo').val();
+	//var codigo = $('#onlycodigo').val();
+	var perfil_empleado=$('#perfil_empleado').val();
+	   	if(perfil_empleado=="lectora"){
+           var codigo = $('#onlycodigo').val();
+	   	}else{
+            var codigo = $('#ingBarcode').val();
+	   	}
 	if(codigo == ''){
 		$('#error1').modal('show');
 		document.getElementById('player1').play();
@@ -1083,6 +1343,7 @@ function validarIngresocodigo1(){
 							var inactivo = "I";
 							var valor11 = 1;
 							// alert(nombre);
+							document.getElementById('player1').pause();
 							document.getElementById('player').play();
 							$('.smsback').css('background-color','#5cb85c');
 							$('#titlemodal').html('Boleto Correcto!');
@@ -1194,6 +1455,7 @@ function validarIngresocodigo1(){
 							var idabajo = row.idabajo;
 							var inactivo = "I";
 							// alert(nombre);
+							document.getElementById('player1').pause();
 							document.getElementById('player').play();
 							$('.smsback').css('background-color','#5cb85c');
 							$('#titlemodal').html('Boleto Correcto!');
@@ -1223,10 +1485,11 @@ function validarIngresocodigo1(){
 							setTimeout(function(){
 								//alert("Boom!");
 								location.reload();
-							}, 1000);
+							}, 100);
 						}
 					}
 				}else{
+					document.getElementById('player').pause();
 					document.getElementById('player1').play();
 					$('.smsback').css('background-color','#f0ad4e');
 					$('#titlemodal').html('Boleto Incorrecto!');

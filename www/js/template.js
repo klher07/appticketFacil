@@ -268,7 +268,7 @@
 
 
 	function validarCedula(e){
-		bajarTodasEspeciales1();
+		//bajarTodasEspeciales1();
 		console.log(e.keyCode);
 		var controlTiposTickets = $('#controlTiposTickets').val();
 		if(e.keyCode == 13){
@@ -356,12 +356,14 @@
 										//alert("Boom!");
 										document.getElementById('player1').pause();
 										$('#sms').modal('hide');
+										//$("#sms").fadeOut(1500);
 										$('#ingBarcode').val('');
 										$('#ingCedula').val('');
 										$('#ingBarcode').focus();
-										bajarTodasEspeciales1();
-										bajarTodas();
+										//bajarTodas11();
+										//bajarTodasEspeciales1();
 									}, 3000);
+									$('#ticketsEspeciales').modal('show');
 							}else if(strQr == 0 ){
 								var idDesc = (strQr+idLocB+strQr);
 								if(estado == "A"){
@@ -594,12 +596,14 @@
 										//alert("Boom!");
 										document.getElementById('player1').pause();
 										$('#sms').modal('hide');
+										//$("#sms").fadeOut(1500);
 										$('#ingBarcode').val('');
 										$('#ingCedula').val('');
 										$('#ingBarcode').focus();
-										bajarTodasEspeciales1();
-										bajarTodas()
+										//bajarTodas11();
+										//bajarTodasEspeciales1();
 									}, 3000);
+									$('#ticketsEspeciales').modal('show');
 							}else if(strQr != 0 && controlTiposTickets != 0 ){
 								if(estado == "A"){
 									var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
@@ -641,7 +645,7 @@
 														$('#ingBarcode').val('');
 														$('#ingCedula').val('');
 														$('#ingBarcode').focus();
-														sincroniza();
+														//sincroniza();
 													}, 3000);
 
 												}
@@ -785,7 +789,7 @@
 														$('#ingBarcode').val('');
 														$('#ingCedula').val('');
 														$('#ingBarcode').focus();
-														sincroniza();
+														//sincroniza();
 													}, 3000);
 
 												}
@@ -976,6 +980,9 @@
 			
 			$('#ingBarcode').val('');
 			$('#ingBarcode').focus();
+
+			$('#no_socio').css('display','block');
+			$('#socio').css('display','none');
 			
 			$('#controlTiposTickets').val(0);
 			
@@ -983,18 +990,22 @@
 			$('#parrafoTickets').addClass('alert-info');
 			$('#contieneValidadorCedula').css('display','none');
 			$('#tipoTickets').html(' Normales ');
-			
+			$('#r3').prop('checked',false);
 			$('#r2').prop('checked',false);
 			$('#r1').prop('checked',true);
-		}else{
+		}
+		if(id==1){
 			
 			$('#r1').prop('checked',false);
 			$('#r2').prop('checked',true);
-			
+			$('#r3').prop('checked',false);
 			$('#ingCedula').attr('disabled',false);
 			$('#ingCedula').attr('readonly',false);
 			$('#ingCedula').focus();
 			$('#controlTiposTickets').val(1);
+
+			$('#no_socio').css('display','block');
+			$('#socio').css('display','none');
 			
 			$('#parrafoTickets').removeClass('alert-info');
 			$('#parrafoTickets').addClass('alert-danger');
@@ -1002,8 +1013,27 @@
 			$('#tipoTickets').html(' Especiales (con descuento) ');
 			
 		}
+		if(id==2){
+			
+			$('#r1').prop('checked',false);
+			$('#r3').prop('checked',true);
+			$('#r2').prop('checked',false);
+			$('#ingCedula1').attr('disabled',false);
+			$('#ingCedula1').attr('readonly',false);
+			$('#no_socio').css('display','none');
+			$('#socio').css('display','block');
+			//$('#ingCedula').focus();
+			$('#controlTiposTickets').val(2);
+		    //alert('socio');	
+			//$('#parrafoTickets').removeClass('alert-info');
+			//$('#parrafoTickets').addClass('alert-danger');
+			//$('#contieneValidadorCedula').css('display','block');
+			//$('#tipoTickets').html('Socio');
+			
+		}
 	}
 
+	
 
 
 
@@ -1222,6 +1252,58 @@
 			},errorCB,successCB);
 		});
 	}
+
+	function contador(){
+
+		total=0;
+		var fn=function(){
+			cambioTotal();
+		}
+		var tiempo = setInterval(fn,1000);
+	}
+	function cambioTotal(){
+		if(total!=99 ){
+			if(total!=100 ){
+			total=total+1;
+			$('#cd').html(total+" %completado");
+			$('.progress-bar').attr("style","width:"+total+"% ");
+			}
+		}
+	}
+	function terminado(){
+		total=100;
+		//clearInterval(tiempo);
+		$('#cd').html(total+" %completado");
+		$('.progress-bar').attr("style","width:"+total+"%");
+	}
+		function conta(){
+
+		total=0;
+		var fn=function(){
+			cambioTotal();
+		}
+		var tiempo = setInterval(fn,2000);
+		}
+/*function conta(){
+		$(document).ready(function() {
+        var percent = 0;
+ 
+      timerId = setInterval(function() {
+        //increment progress bar
+        percent += 5;
+        $('.progress-bar').css('width', percent+'%');
+        $('.progress-bar').attr('aria-valuenow', percent);
+        $('.progress-bar').text(percent+'%');
+ 
+        //complete
+        if (percent == 100) {
+            clearInterval(timerId);
+           // $('.information').show();
+        }
+ 
+      }, 1000);
+    });
+}*/
 	function bajarTodas(){
 		$('#mensajeConteo').html('<center><b>Espere un momento sincronizando su app!!!</b></center>');
 		$('#ingBarcode').attr('disabled',true);
@@ -1334,10 +1416,160 @@
 	}
 
 
+	function bajarTodas11(){
+		//$('#mensajeConteo').html('<center><b>Espere un momento sincronizando su app!!!</b></center>');
+		//$('#ingBarcode').attr('disabled',true);
+		//$('#ingBarcode').attr('readonly',true);
+		$('#mensajeConteo').html('<center><img src="../img/loading.gif" style="max-width:25px;"></center>');
+		conta();
+		var idcon=$('#myidconcierto').val();
+		var codigo=$('#ingBarcode').val();
+		var nom_empleado=$('#nom_empleado').val();
+		var perfil_empleado=$('#perfil_empleado').val();
+		$('#carg').attr("style","display:block");
+		//$('.progress-bar').css("style","width:100%");
+		var tipoRuta = 1;
+		
+		if(perfil_empleado == 'lectora' ){
+			tipoRuta = 1;
+		}else{
+			tipoRuta = 2;
+			bajaDescuentos(idcon);
+		}
+
+		$.post("probando.php",{ 
+							codigo : codigo
+		}).done(function(data){
+				$('#contenedor1').html(data);
+			    //alert(data);
+			    var localidad=data;
+						 //if(localidad==''){
+						 	//window.location='';
+						 //}  
+						
+						     //var localidad = $(this).val(); 
+			var idconcierto=$('#myidconcierto').val();
+			//$('.la_localidad_'+localidad).addClass('danger');
+			//alert(idconcierto +'<<>>'+localidad);
+			$('#bajarTodas22').removeClass('btn btn-info');
+			$('#bajarTodas22').addClass('btn btn-danger');
+			$('#bajarTodas22').attr('disabled',true);
+			$('#waitsubir4').css('display','block');
+			var base = 1;
+			if(tipoRuta == 2){
+				var url1 = "https://www.ticketfacil.ec/ticket2/controlAccesos/bajarMovil_fabricio33.php?idconcierto1="+idconcierto+"&base1="+base
+			}else{
+				var url1 = "https://www.ticketfacil.ec/ticket2/controlAccesos/bajarMovil_fabricio33.php?idconcierto1="+idconcierto+"&base1="+base
+			}
+
+			$.ajax({
+				 
+				url : url1,
+				//data: {idconcierto:idconcierto,localidad:localidad},
+			}).done(function(response) {
+				
+				
+				//alert(response);
+				if(response != 'error'){
+					var objDatos=JSON.parse(response);
+					var misboletos=objDatos.Boletos;
+					console.log(misboletos.length);
+					var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					db.transaction(function(tx){
+						for(i=0; i < misboletos.length; i++){
+							if(tipoRuta = 2){
+								var id = misboletos[i].idBoleto; 
+								var barcode = misboletos[i].barcode;
+								var estado = misboletos[i].estado;
+								var id_loc = misboletos[i].id_loc;
+								var id_desc = misboletos[i].id_desc;
+								var valor = misboletos[i].valor;
+								var identComprador=2;
+						     //if(barcode!=codigo){		
+								//tx.executeSql("INSERT OR IGNORE INTO Boleto (idBoleto ,nom_empleado,strQr,strBarcode,idLocB,strEstado,identComprador,valor) VALUES (?,?,?,?,?,?,?,?)",[id,nom_empleado,id_desc,barcode,id_loc,estado,identComprador,valor]);
+								
+								tx.executeSql('UPDATE Boleto SET  identComprador = ?, strQr = ? , valor = ? WHERE idBoleto = ?;',[identComprador,id_desc,valor,id]);
+							 //}else{
+
+							 //}
+							}else{
+								var id = misboletos[i].idBoleto; 
+								var barcode = misboletos[i].barcode;
+								var estado = misboletos[i].estado;
+								var id_loc = misboletos[i].id_loc;
+								
+								var identComprador=2;
+								//if(barcode!=codigo){
+								//tx.executeSql("INSERT OR IGNORE INTO Boleto (idBoleto ,nom_empleado,strBarcode,idLocB,strEstado,identComprador) VALUES (?,?,?,?,?,?)",[id,nom_empleado,barcode,id_loc,estado,identComprador]);
+							    tx.executeSql('UPDATE Boleto SET  identComprador = ?, strQr = ? , valor = ? WHERE idBoleto = ?;',[identComprador,id_desc,valor,id]);
+							    //}else{
+
+							    //}
+							
+						  }	
+							
+						}
+						//$('.la_localidad_'+localidad).removeClass('danger');
+						//$('.la_localidad_'+localidad).addClass('info');
+						
+						//mm++;
+						
+						//console.log('seleccionados : ' + nn + ' bajadas : ' + mm );
+						/*if(mm == nn){
+							setTimeout(function(){
+								alert('Localidades bajadas con éxito')
+								$('#waitsubir2').css('display','none');
+								//window.location = '';
+							}, 10000);
+						}*/
+
+					},errorCB,successCB);
+					//$('#recibeJson').html(response);
+					//alert(response);
+					//var total2="100";
+					$('#waitbajar').fadeOut('slow');
+					$('#btnbajar').delay(600).fadeIn('slow');
+					$('#mensajeConteo').delay(600).fadeIn('slow');
+					terminado();
+					//$('#cd').html(total2+" %completado");
+					//$('.progress-bar').attr('aria-valuenow', total2);
+					//percent += 5;
+			        //$('.progress-bar').css('width', total2+'%');
+			        //$('.progress-bar').attr('aria-valuenow', total2);
+			        //$('.progress-bar').text(total2+'%');
+					//$('#carg').attr("style","display:none");
+					<!-- $('#myidconcierto').val(''); -->
+					<!-- $('#clave_segura').val(''); -->
+					//alert('Sincronizacion Exitosa');
+					//window.location = '';
+				     setTimeout(function(){
+					// alert('Localidades bajadas con éxito')
+					// $('#waitsubir2').css('display','none');
+					 //window.location = '';
+				 }, 3000);
+				} 
+				
+				// setTimeout(function(){
+					// alert('Localidades bajadas con éxito')
+					// $('#waitsubir2').css('display','none');
+					// window.location = '';
+				// }, 20000);
+
+			});
+
+		});
+ 
+			
+			
+			
+	}
+
+
 	function bajarTodasEspeciales(){
 		var idcon=$('#myidconcierto').val();
-		
+		conta();
 		 
+		 $('#carg').attr("style","display:block");
 			<!-- var localidad = $(this).val(); -->
 			var idconcierto=$('#myidconcierto').val();
 			//alert(idconcierto +'<<>>'+localidad);
@@ -1373,9 +1605,82 @@
 							tx.executeSql('UPDATE Boleto SET nom_empleado = ? , idCli = ? , id_descuento = ? , strEstado= ?  WHERE idBoleto = ? ;',[nom_empleado , cedula,id_descuento,estado2,idBoleto]);
 						}
 						
-						alert('Tickets Especiales Actualizados con Exito');
+						//alert('Tickets Especiales Actualizados con Exito');
 						$('#waitsubir2').css('display','none');
-						window.location = '';
+						//window.location = '';
+						terminado();
+						setTimeout(function(){
+							window.location = '';
+						}, 3000);
+					},errorCB,successCB);
+					//$('#recibeJson').html(response);
+					//alert(response);
+					$('#waitbajar').fadeOut('slow');
+					$('#btnbajar').delay(600).fadeIn('slow');
+					
+					
+					<!-- $('#myidconcierto').val(''); -->
+					<!-- $('#clave_segura').val(''); -->
+				} 
+				
+				<!-- setTimeout(function(){ -->
+					
+				<!-- }, 10000); -->
+				
+			});
+			
+			
+			
+		
+	}
+
+	function socios(){
+		//var idcon=$('#myidconcierto').val();
+		//conta();
+		 
+		 //$('#carg').attr("style","display:block");
+			<!-- var localidad = $(this).val(); -->
+			var idconcierto=$('#myidconcierto').val();
+			//alert(idconcierto +'<<>>'+localidad);
+			$('#bajarTodas222').removeClass('btn btn-info');
+			$('#bajarTodas222').addClass('btn btn-danger');
+			$('#bajarTodas222').attr('disabled',true);
+			$('#waitsubir4').css('display','block');
+			var base = 1;
+			$('#mensajeConteo').html('<center><img src="../img/loading.gif" style="max-width:25px;"></center>');
+			$.ajax({
+				url: "https://www.ticketfacil.ec/ticket2/controlAccesos/bajarTodasEspeciales.php?idconcierto="+idconcierto+"&base="+base,
+				//data: {idconcierto:idconcierto,localidad:localidad},
+			}).done(function(response) {
+				
+				
+				<!-- alert(response); -->
+				if(response != 'error'){
+					var objDatos=JSON.parse(response);
+					var misboletos=objDatos.Boletos;
+					console.log(misboletos.length);
+					var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					db.transaction(function(tx){
+						for(i=0; i < misboletos.length; i++){
+							var id = misboletos[i].idBoleto; 
+							var idBoleto = misboletos[i].idBoleto;
+							var cedula = misboletos[i].cedula;
+							var id_descuento = misboletos[i].id_descuento;
+							var nom_empleado = misboletos[i].nom_empleado;
+							
+							var estado2 = 'V';
+							
+							<!-- alert('UPDATE Boleto SET idCli = '+cedula+' , strEstado= '+estado2+'  WHERE idBoleto = '+idBoleto+' ;'); -->
+							tx.executeSql('UPDATE Boleto SET nom_empleado = ? , idCli = ? , id_descuento = ? , strEstado= ?  WHERE idBoleto = ? ;',[nom_empleado , cedula,id_descuento,estado2,idBoleto]);
+						}
+						
+						//alert('Tickets Especiales Actualizados con Exito');
+						$('#waitsubir2').css('display','none');
+						//window.location = '';
+						terminado();
+						setTimeout(function(){
+							window.location = '';
+						}, 3000);
 					},errorCB,successCB);
 					//$('#recibeJson').html(response);
 					//alert(response);
@@ -1916,7 +2221,19 @@
 	function logout(){
 		window.location = '../index.html'; 
 	}
+    
+    function aceptarSincronizacionEspeciales(){
+    	//$('#ticketsEspeciales').modal('hide');
+    	bajarTodas11();
+    	sincroniza();
+    	$('#bu2').attr('disabled',true);
+    }
 
+    function cancelarSincronizacionEspeciales(){
+    	location.reload();
+          //$('#ticketsEspeciales').modal('hide');
+          //$('#ingCedula').attr('disabled',true);
+    }
 	
 
 	function sincroniza(){
@@ -1974,7 +2291,7 @@
 	}
 
 
-	setInterval(function () { 
-		sincroniza(); 
-	}, 6000000);
+	//setInterval(function () { 
+		//sincroniza(); 
+	//}, 6000000);
 
