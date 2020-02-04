@@ -2030,6 +2030,7 @@
 		
 	}
 	ver_boletos_vs_localidad();
+	ver_boletos_vs_localidad1();
 	function ver_boletos_vs_localidad(){
 		
 		var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
@@ -2040,7 +2041,7 @@
 				var datos = '';
 				var tr = '';
 				var sumaCuantos = 0; 
-				tr += '<tr  ><th colspan = "2" >Tickets ingresados</th></tr>';
+				tr += '<tr  ><th colspan = "2" >Tickets ingresados Normales</th></tr>';
 				var anulado = 'ANU';
 				var mm=0;
 				for(var j = 0; j < registro; j++){
@@ -2051,7 +2052,7 @@
 					
 					<!-- var cuantos2=''; -->
 					<!-- db.transaction(function(tx){ -->
-						<!-- alert("SELECT count(idBoleto) as cuantos2 FROM Boleto as b where b.idLocB = "+localidad+" and strEstado = '"+anulado+"';"); -->
+						<!-- alert("SELECT count(idBoleto) as cuantos2, FROM Boleto as b where b.idLocB = "+localidad+" and strEstado = '"+anulado+"';"); -->
 						
 					<!-- },errorCB,successCB); -->
 					
@@ -2067,7 +2068,7 @@
 					<!-- alert(cuantos + ' ' + sumaCuantos); -->
 					mm++;
 				}
-				
+					
 				tr += '	<tr style = "display:;">\
 							<td style = "color:red;">\
 								Total\
@@ -2077,12 +2078,68 @@
 							</td>\
 						</tr>';
 				$('#boletos_entrados').html(tr);
+				$('#pruebq11').val(sumaCuantos);
 				
 			},errorCB,successCB);
 		});
 		
 		
 	}
+	function ver_boletos_vs_localidad1(){
+		
+		var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+		db.transaction(function(tx){
+			tx.executeSql('select count(r.idBoleto) as cuantos1 , l.nombre as nom_localidad1 from Boletos_Reimpresos as r , localidad as l where l.id_loc = r.idLocB and (r.strEstado = "I" or r.documentoHISB = "I" ) group by r.idLocB;',[],function(tx,results){
+				var registro1 = results.rows.length;
+				//alert(registro);
+				var datos = '';
+				var tr = '';
+				var sumaCuantos = 0; 
+				tr += '<tr  ><th colspan = "2" >Tickets ingresados Reimpresos</th></tr>';
+				var anulado = 'ANU';
+				var mm=0;
+				for(var j = 0; j < registro1; j++){
+				
+					var row1 = results.rows.item(j);
+					var nom_localidad1 = row1.nom_localidad1;
+					var cuantos1 = row1.cuantos1;
+					
+					<!-- var cuantos2=''; -->
+					<!-- db.transaction(function(tx){ -->
+						<!-- alert("SELECT count(idBoleto) as cuantos2, FROM Boleto as b where b.idLocB = "+localidad+" and strEstado = '"+anulado+"';"); -->
+						
+					<!-- },errorCB,successCB); -->
+					
+					//alert('<<>>'+ nombreL);
+					tr += '	<tr class = "localidadesBajadas" >\
+						<td>\
+							'+nom_localidad1+'</td>\
+						<td style = "text-align:center;">\
+							'+cuantos1+'\
+						</td>\
+					</tr>';
+					sumaCuantos = (parseInt(sumaCuantos) + parseInt(cuantos1));
+					<!-- alert(cuantos + ' ' + sumaCuantos); -->
+					mm++;
+				}	
+				
+				tr += '	<tr style = "display:;">\
+							<td style = "color:red;">\
+								Total\
+							</td>\
+							<td style = "background-color: #171A1B;color: #1E9F75;text-align:center; font-size: 20px">\
+								'+sumaCuantos+'\
+							</td>\
+						</tr>';
+				$('#boletos_entrados1').html(tr);
+				$('#pruebq22').val(sumaCuantos);
+				
+			},errorCB,successCB);
+		});
+		
+		
+	}
+
 	//$( document ).ready(function() {
 		
 		<!-- setTimeout(function(){ -->

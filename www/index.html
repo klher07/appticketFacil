@@ -258,9 +258,9 @@
 									tx.executeSql('UPDATE localidad SET id_loc = ?,nombre= ? WHERE id_loc = ?;',[idLocalidad,strDescripcionL,idLocalidad]);
 									
 								}
-									tx.executeSql("INSERT INTO concieto (id_con,nombre_c,es_para_feria) VALUES (?,?,?)",[id_con,res[1],res[2]]);
-									
+									tx.executeSql("INSERT INTO concieto (id_con,nombre_c,es_para_feria) VALUES (?,?,?)",[id_con,res[1],res[2]]);									
 									tx.executeSql("INSERT OR IGNORE INTO empleado (nombre,perfil) VALUES (?,?)",[empleado,tipo_acceso]);
+							        tx.executeSql("INSERT INTO claves(nombre,clave) VALUES (?,?)",[empleado,claveEvento]);
 							},errorCB,successCB);
 							
 							

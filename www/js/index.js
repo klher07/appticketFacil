@@ -21,6 +21,7 @@ function iniciaDB(tx){
 	tx.executeSql('CREATE TABLE IF NOT EXISTS errores (id integer primary key AUTOINCREMENT, nombre text , estado integer )');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS descuentos (id integer primary key AUTOINCREMENT, id_desc integer UNIQUE, nombre text , precio text , localidad integer , tipo integer )');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS tickets_entregados (id integer primary key AUTOINCREMENT, id_loc integer , id_desc integer , cantidad text)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS claves (id integer primary key AUTOINCREMENT, nombre text , clave integer)');
 	
 	
 }
@@ -280,7 +281,7 @@ function validarIngresocodigo(){
 						$('#sms').modal('show');
 						setTimeout(function(){
 							//alert("Boom!");
-							location.reload();
+							//location.reload();
 						}, 1000);
 						//window.location = '';
 					}else{
@@ -312,7 +313,7 @@ function validarIngresocodigo(){
 							setTimeout(function(){
 								//alert("Boom!");
 								location.reload();
-							}, 100);
+							}, 1000);
 						}else if(estado == "ANU"){
 							// alert('ya usado');
 							var idabajo = row.idabajo;
@@ -345,7 +346,7 @@ function validarIngresocodigo(){
 							$('#sms').modal('show');
 							setTimeout(function(){
 								//alert("Boom!");
-								location.reload();
+								//location.reload();
 							}, 3000);
 						}else if(estado == "I"){
 							// alert('ya usado');
