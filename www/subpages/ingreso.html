@@ -1100,7 +1100,7 @@ function bajarCodigos(){
        // var codigo = $('#onlycodigo').val();
 		var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
 		db.transaction(function(tx){
-			tx.executeSql('SELECT * FROM Boletos_Reimpresos WHERE strBarcode = ?;',[codigo],function(tx,results){
+			tx.executeSql('SELECT * FROM Boleto WHERE strBarcode = ?;',[codigo],function(tx,results){
 				console.log(results);
 				// var registros_no_vendidos = results.items.length;
 				//var vendidos  = results.rows[0].vendidos;
@@ -1117,31 +1117,10 @@ function bajarCodigos(){
 						//alert("Boom!");
 						//location.reload();
 					}, 1000);*/
-				}else{		
-				  /*document.getElementById('player1').play();
-					$('.smsback').css('background-color','#f0ad4e');
-					$('#titlemodal').html('Boleto Incorrecto!');
-					$('#mensaje').html('Datos Incorrectos!');
-					$('#sms').modal('show');
-					setTimeout(function(){
-						//alert("Boom!");
-						//location.reload();
-					}, 1000);*/
-					
-					/*var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
-					db.transaction(function(tx){
-						tx.executeSql('INSERT INTO errores (nombre , estado) VALUES (?,?);',['Boleto incorrecto','22'],function(tx,res){
-							
-						});                
-					},errorCB,successCB);*/
-				}
-				
-			});
-		},errorCB,successCB);
 
-		  var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
 		db.transaction(function(tx){
-			tx.executeSql('SELECT * FROM Boleto WHERE strBarcode = ?;',[codigo],function(tx,results){
+			tx.executeSql('SELECT * FROM Boletos_Reimpresos WHERE strBarcode = ?;',[codigo],function(tx,results){
 				console.log(results);
 				// var registros_no_vendidos = results.items.length;
 				//var vendidos  = results.rows[0].vendidos;
@@ -1149,7 +1128,7 @@ function bajarCodigos(){
 				var registros = results.rows.length;
 				if(registros==0){
                       //validarIngresocodigo1();
-				    /*document.getElementById('player1').play();
+				    document.getElementById('player1').play();
 					$('.smsback').css('background-color','#f0ad4e');
 					$('#titlemodal').html('Boleto Incorrecto!');
 					$('#mensaje').html('Datos Incorrectos!');
@@ -1157,7 +1136,7 @@ function bajarCodigos(){
 					setTimeout(function(){
 						//alert("Boom!");
 						location.reload();
-					}, 1000);*/
+					}, 1000);
 				}else{		
 				  /*document.getElementById('player1').play();
 					$('.smsback').css('background-color','#f0ad4e');
@@ -1181,6 +1160,30 @@ function bajarCodigos(){
 				
 			});
 		},errorCB,successCB);
+				}else{		
+
+					 
+				  /*document.getElementById('player1').play();
+					$('.smsback').css('background-color','#f0ad4e');
+					$('#titlemodal').html('Boleto Incorrecto!');
+					$('#mensaje').html('Datos Incorrectos!');
+					$('#sms').modal('show');
+					setTimeout(function(){
+						//alert("Boom!");
+						//location.reload();
+					}, 1000);*/
+					
+					/*var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
+					db.transaction(function(tx){
+						tx.executeSql('INSERT INTO errores (nombre , estado) VALUES (?,?);',['Boleto incorrecto','22'],function(tx,res){
+							
+						});                
+					},errorCB,successCB);*/
+				}
+				
+			});
+		},errorCB,successCB);
+
 	   }
     }
 
