@@ -542,6 +542,7 @@
 		var reloj = $("#iframe1").contents().find("#reloj").val();
 		var playing = false;
 		var codigo = $('#ingBarcode').val();
+		var cedula1 = $('#ingCedula').val();
 		if(codigo == ''){
 			$('#error1').modal('show');
 			document.getElementById('player1').play();
@@ -2304,7 +2305,7 @@
 			if(perfil_empleado == 'cajero' ){
 				var db = window.openDatabase("Database", "1.0", "TicketMobile", 200000);
 				db.transaction(function(tx){
-					tx.executeSql("SELECT  strBarcode , idCli  , idBoleto , id_descuento from Boleto where idCli > 0 ",[],function(tx,results){
+					tx.executeSql("SELECT  strBarcode , idCli  , idBoleto , id_descuento,strQr,idLocB, valor from Boleto where idCli>0",[],function(tx,results){
 						var registro = results.rows.length;
 						<!-- alert(registro); -->
 						if(registro > 0){
@@ -2316,8 +2317,11 @@
 								var idCli = row1.idCli;
 								var idBoleto = row1.idBoleto;
 								var id_descuento = row1.id_descuento;
+								var strQr = row1.strQr;
+								var idLocB = row1.idLocB;
+								var valor = row1.valor;
 								
-								servi += idcon +'@'+ strBarcode +'@'+ idCli +'@'+ idBoleto +'@'+id_descuento+'|';
+								servi += idcon +'@'+ strBarcode +'@'+ idCli +'@'+ idBoleto +'@'+id_descuento+'@'+strQr+'@'+idLocB+'@'+valor+'|';
 								
 							}
 							var serviform = servi.substring(0,servi.length - 1);
