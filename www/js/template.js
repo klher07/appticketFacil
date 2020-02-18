@@ -1606,7 +1606,7 @@
 							tx.executeSql('UPDATE Boleto SET nom_empleado = ? , idCli = ? , id_descuento = ? , strEstado= ?  WHERE idBoleto = ? ;',[nom_empleado , cedula,id_descuento,estado2,idBoleto]);
 						}
 						
-						alert('Tickets Especiales Actualizados con Exito');
+						//alert('Tickets Especiales Actualizados con Exito');
 						$('#waitsubir2').css('display','none');
 						//window.location = '';
 						terminado();
