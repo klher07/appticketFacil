@@ -271,7 +271,7 @@
 							</table>
 						
 						<div id="no_socio">
-							<input onkeydown="validarBoletocodigo1(event);ingresoTicket(event);" type = "number" id = "ingBarcode" class = "form-control"  placeholder = 'ingrese ticket' />
+							<input onkeydown="validarBoletocodigo1(event);ingresoTicket(event);" type = "number" id = "ingBarcode" class = "form-control" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"  placeholder = 'ingrese ticket' />
 							<input onkeydown="validarCedula(event);" type = "number" id = "ingCedula" class = "form-control"  readonly disabled placeholder = 'ingrese cedula' />
 						</div>
 						<div id="socio" style="display:none;">
@@ -333,7 +333,7 @@
 								<input type = "checkbox" id="chk_all" onclick="selectAll()"  />
 							</td>
 							<td colspan = '2'>
-								<button type="button" class="btn btn-info" onclick = 'bajarTodas();bajarCodigos();' id = 'bajarTodas22'>
+								<button type="button" class="btn btn-info" onclick = 'sincroniza();bajarTodas();bajarCodigos();' id = 'bajarTodas22'>
 									BAJAR LOCALIDADES SELECCIONADAS
 									<span id="waitsubir4" style="display:none;">bajando...<img src="../img/loading.gif" style="max-width:25px;" /></span>
 								</button>
@@ -567,7 +567,7 @@
 								<td>
 									<button type="button" id="bu1" class="btn btn-warning"  onclick = "cancelarSincronizacionEspeciales();"  >Cancelar</button>
 								</td>							
-								<td ><button type="button" id="bu2" class="btn btn-danger" onclick = " aceptarSincronizacionEspeciales();" >Aceptar</button></td>
+								<td ><button type="button" id="bu2" class="btn btn-danger" onclick = "cerrarModal();;$('#popupidconcierto').modal('show');" >Aceptar</button></td>
 							</tr>
 						</table>
 					</div>
@@ -581,7 +581,7 @@
 			</div>
 		</div>
 	</div>
-	
+	<!--aceptarSincronizacionEspeciales();-->
 	
 	<div data-keyboard="false" data-backdrop="static" class="modal fade" id="contieneReporteDiferencias" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style = 'display:none;padding-right:2%;padding-left:2%' >
 		<div class="modal-dialog modal-lg" role="document" >
@@ -715,6 +715,10 @@
 	</div>
 </body>
 	<script type="text/javascript">
+
+		function cerrarModal(){
+   	$('#ticketsEspeciales').modal('hide');
+   }
 
 		setTimeout(function(){
 			total_boletos_vs_localidad();
@@ -1020,7 +1024,7 @@ function bajarCodigos(){
 						console.log('seleccionados : ' + nn + ' bajadas : ' + mm );
 						if(mm == nn){
 							setTimeout(function(){
-								//alert('Localidades bajadas con éxito')
+								alert('Localidades bajadas con éxito')
 								$('#waitsubir2').css('display','none');
 								window.location = '';
 							}, 10000);
