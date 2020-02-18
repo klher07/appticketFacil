@@ -268,7 +268,7 @@
 
 
 	function validarCedula(e){
-		//bajarTodasEspeciales1();
+		bajarTodasEspeciales1();
 		console.log(e.keyCode);
 		var controlTiposTickets = $('#controlTiposTickets').val();
 		if(e.keyCode == 13){
